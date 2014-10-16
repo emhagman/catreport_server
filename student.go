@@ -21,6 +21,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// In Go, strings are never null or 'nil'
 	if username == "" || password == "" {
 		fmt.Fprint(res, Response{"success": false})
+		return
 	}
 
 	// Automatically add @villanova.edu so people can't mess with us
@@ -39,6 +40,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	db, err := DBConnect()
 	if err != nil {
 		fmt.Fprint(res, Response{"success": false})
+		return
 	}
 
 	// Go validate our user (using the old password first)
