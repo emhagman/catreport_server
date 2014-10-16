@@ -45,7 +45,6 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Go validate our user (using the old password first)
-	found := false
 	rows, err := db.Query("SELECT * FROM students WHERE email = $1 AND password = $2", username, oldPassword)
 	if err != nil {
 		log.Println("error looking up using old hash")
@@ -55,10 +54,12 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// See if we have at least one row
+	found := false
 	for rows.Next() {
 		log.Println("login with old hash found")
 		found = true
 		rows.Close()
+		return
 	}
 
 	// Check to see if old hash works
