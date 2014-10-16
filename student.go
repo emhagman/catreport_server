@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -20,6 +21,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// Make sure we actually got a username and password
 	// In Go, strings are never null or 'nil'
 	if username == "" || password == "" {
+		log.Println("empty username or password empty")
 		fmt.Fprint(res, Response{"success": false})
 		return
 	}
@@ -27,6 +29,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// Automatically add @villanova.edu so people can't mess with us
 	// Villanova students only, remember?
 	if !strings.Contains(username, "@villanova.edu") {
+		log.Println("appended villanova e-mail address")
 		username += "@villanova.edu"
 	}
 
@@ -39,6 +42,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// Make sure we have connection first
 	db, err := DBConnect()
 	if err != nil {
+		log.Println("failed to connect to database")
 		fmt.Fprint(res, Response{"success": false})
 		return
 	}
@@ -47,6 +51,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	found := false
 	rows, err := db.Query("SELECT * FROM students WHERE username = $1 AND password = $2", username, oldPassword)
 	for rows.Next() {
+		log.Println("login with old hash found")
 		found = true
 	}
 
@@ -71,6 +76,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Wrong password or username bro
+	log.Println("invalid username or password")
 	fmt.Fprint(res, Response{"success": false})
 }
 
