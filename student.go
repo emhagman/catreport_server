@@ -47,6 +47,14 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// Go validate our user (using the old password first)
 	found := false
 	rows, err := db.Query("SELECT * FROM students WHERE username = $1 AND password = $2", username, oldPassword)
+	if err != nil {
+		log.Println("error looking up using old hash")
+		log.Println(err)
+		fmt.Fprint(res, Response{"success": false})
+		return
+	}
+
+	// See if we have at least one row
 	for rows.Next() {
 		log.Println("login with old hash found")
 		found = true
@@ -66,6 +74,14 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// Let's check to see if they have the new hashing algo
 	// I really should just convert everyone eventually...
 	rows, err = db.Query("SELECT * FROM students WHERE username = $1 AND password = $2", username, newPassword)
+	if err != nil {
+		log.Println("error looking up using new hash")
+		log.Println(err)
+		fmt.Fprint(res, Response{"success": false})
+		return
+	}
+
+	// See if we have at least one row
 	for rows.Next() {
 		SessionLogin(res, req)
 		fmt.Fprint(res, Response{"success": true, "new": true})
