@@ -71,7 +71,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 		// update it
 		// again, if this fails, we can still use md5 for now
-		res, err2 := stmt.Exec(newPassword, username)
+		_, err2 := stmt.Exec(newPassword, username)
 		if err2 != nil {
 			log.Println("error updating new password hash")
 			log.Println(err)
