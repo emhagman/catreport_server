@@ -11,8 +11,8 @@ import (
 func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 	// Get username and password
-	username := req.Form.Get("username")
-	password := req.Form.Get("password")
+	username := req.FormValue("username")
+	password := req.FormValue("password")
 
 	// Make sure we actually got a username and password
 	// In Go, strings are never null or 'nil'
