@@ -46,7 +46,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 	// Go validate our user (using the old password first)
 	found := false
-	rows, err := db.Query("SELECT * FROM students WHERE username = $1 AND password = $2", username, oldPassword)
+	rows, err := db.Query("SELECT * FROM students WHERE email = $1 AND password = $2", username, oldPassword)
 	if err != nil {
 		log.Println("error looking up using old hash")
 		log.Println(err)
@@ -73,7 +73,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 	// Let's check to see if they have the new hashing algo
 	// I really should just convert everyone eventually...
-	rows, err = db.Query("SELECT * FROM students WHERE username = $1 AND password = $2", username, newPassword)
+	rows, err = db.Query("SELECT * FROM students WHERE email = $1 AND password = $2", username, newPassword)
 	if err != nil {
 		log.Println("error looking up using new hash")
 		log.Println(err)
