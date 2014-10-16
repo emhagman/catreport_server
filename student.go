@@ -39,6 +39,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	db, err := DBConnect()
 	if err != nil {
 		log.Println("failed to connect to database")
+		log.Println(err.Error())
 		fmt.Fprint(res, Response{"success": false})
 		return
 	}
