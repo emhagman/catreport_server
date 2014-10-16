@@ -40,7 +40,7 @@ func HashPassword(password, salt []byte) string {
 
 func OldHashPassowrd(password string) string {
 	h := md5.New()
-	io.WriteString(h, "The fog is getting thicker!")
+	io.WriteString(h, password)
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
