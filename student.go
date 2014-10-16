@@ -58,6 +58,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	for rows.Next() {
 		log.Println("login with old hash found")
 		found = true
+		rows.Close()
 	}
 
 	// Check to see if old hash works
