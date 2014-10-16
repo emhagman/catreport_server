@@ -73,7 +73,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 			_, err2 := stmt.Exec(newPassword, username)
 			if err2 != nil {
 				log.Println("error updating new password hash")
-				log.Println(err)
+				log.Println(err2)
 			}
 		}
 
