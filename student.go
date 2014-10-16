@@ -54,17 +54,11 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// See if we have at least one row
-	found := false
-	for rows.Next() {
-		log.Println("login with old hash found")
-		found = true
-		rows.Close()
-		return
-	}
-
 	// Check to see if old hash works
 	// If the old hash did work, update the database with new hash
-	if found {
+	found := false
+	if rows.Next() {
+		log.Println("login with old hash found")
 		StudentLogin(res, req)
 		fmt.Fprint(res, Response{"success": true, "old": true})
 		return
