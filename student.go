@@ -56,7 +56,6 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	// See if we have at least one row
 	// Check to see if old hash works
 	// If the old hash did work, update the database with new hash
-	found := false
 	if rows.Next() {
 		log.Println("login with old hash found")
 		StudentLogin(res, req)
