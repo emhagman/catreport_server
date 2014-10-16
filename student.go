@@ -53,16 +53,35 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// New password is hashed using pbkdf2 and the salt is kept on server :P
+	newPassword := HashPassword([]byte(password), []byte(os.Getenv("CATREPORT_SALT")))
+
 	// See if we have at least one row using old hash
 	if rows.Next() {
+
 		log.Println("login with old hash found")
+
+		// update the with new hash
+		// if this fails, we can keep using the old md5 but this isn't really safe...
+		stmt, err := db.Prepare("UPDATE students SET password = ? WHERE email = ?")
+		if err != nil {
+			log.Println("error creating stmt for updating new password hash")
+			log.Println(err)
+		}
+
+		// update it
+		// again, if this fails, we can still use md5 for now
+		res, err2 := stmt.Exec(newPassword, username)
+		if err2 != nil {
+			log.Println("error updating new password hash")
+			log.Println(err)
+		}
+
+		// login and return success
 		SessionLogin(res, req)
 		fmt.Fprint(res, Response{"success": true, "old": true})
 		return
 	}
-
-	// New password is hashed using pbkdf2 and the salt is kept on server :P
-	newPassword := HashPassword([]byte(password), []byte(os.Getenv("CATREPORT_SALT")))
 
 	// Let's check to see if they have the new hashing algo
 	// I really should just convert everyone eventually...
