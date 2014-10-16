@@ -11,12 +11,9 @@ import (
 
 func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
-	// Get our POST vars
-	vars := mux.Vars(req)
-
 	// Get username and password
-	username := vars["username"]
-	password := vars["password"]
+	username := req.Form.Get("username")
+	password := req.Form.Get("password")
 
 	// Make sure we actually got a username and password
 	// In Go, strings are never null or 'nil'
