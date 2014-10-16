@@ -63,7 +63,7 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 		// update the with new hash
 		// if this fails, we can keep using the old md5 but this isn't really safe...
-		stmt, err := db.Prepare("UPDATE students SET password = ? WHERE email = ?")
+		stmt, err := db.Prepare("UPDATE students SET password=? WHERE email=?")
 		if err != nil {
 			log.Println("error creating stmt for updating new password hash")
 			log.Println(err)
