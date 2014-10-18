@@ -143,7 +143,7 @@ func StudentRegister(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Prepare our statement
-	stmt, err := db.Prepare("INSERT INTO students (sfirst, last, email, password) VALUES($1, $2, $3, $4)")
+	stmt, err := db.Prepare("INSERT INTO students (sfirst, last, email, password, verified) VALUES($1, $2, $3, $4, false)")
 	if err != nil {
 		log.Println("error creating stmt for registering user")
 		log.Println(err.Error())
