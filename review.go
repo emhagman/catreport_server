@@ -42,7 +42,7 @@ func ReviewGetRecent(res http.ResponseWriter, req *http.Request) {
 
 	// Go validate our user (using the old password first)
 	reviews := []Review{}
-	err = db.Select(&reviews, "SELECT * FROM reviews ORDER BY date_submitted DESC LIMIT 10", instructorId)
+	err = db.Select(&reviews, "SELECT * FROM reviews ORDER BY date_submitted DESC LIMIT 10")
 	if err != nil {
 		log.Println("error looking up reviews for instructor")
 		log.Println(err)
