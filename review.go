@@ -13,18 +13,18 @@ import (
 
 // Review struct to hold data in
 type Review struct {
-	Id            uint
-	DisplayName   string `db:"display_name" json:"display_name"`
-	StudentEmail  string `db:"student_email" json:"student_email"`
-	ClassName     string `db:"class_name" json:"class_name"`
-	Review        string
-	InstructorId  uint `db:"instructor_id" json:"instructor_id"`
-	Grading       uint
-	Helpfulness   uint
-	Availability  uint
-	Homework      uint
-	Novateachers  sql.NullString
-	DateSubmitted time.Time `db:"date_submitted" json:"date_submitted"`
+	Id            uint           `json:"id"`
+	DisplayName   string         `db:"display_name" json:"display_name"`
+	StudentEmail  string         `db:"student_email" json:"student_email"`
+	ClassName     string         `db:"class_name" json:"class_name"`
+	Review        string         `json:"review"`
+	InstructorId  uint           `db:"instructor_id" json:"instructor_id"`
+	Grading       uint           `json:"grading"`
+	Helpfulness   uint           `json:"helpfulness"`
+	Availability  uint           `json:"availability"`
+	Homework      uint           `json:"homework"`
+	Novateachers  sql.NullString `json:"novateachers"`
+	DateSubmitted time.Time      `db:"date_submitted" json:"date_submitted"`
 }
 
 func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
