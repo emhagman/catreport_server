@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
@@ -11,14 +12,18 @@ import (
 
 // Review struct to hold data in
 type Review struct {
+	Id            uint
 	DisplayName   string `db:"display_name"`
 	StudentEmail  string `db:"student_email"`
-	Grading       uint
 	ClassName     string `db:"class_name"`
 	Review        string
+	InstructorId  uint `db:"instructor_id"`
+	Grading       uint
+	Helpfulness   uint
+	Availability  uint
+	Homework      uint
+	Novateachers  sql.NullString
 	DateSubmitted time.Time `db:"date_submitted"`
-	InstructorId  uint      `db:"instructor_id"`
-	Id            uint
 }
 
 func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
