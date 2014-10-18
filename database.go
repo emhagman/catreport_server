@@ -1,13 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"os"
 )
 
-func DBConnect() (*sql.DB, error) {
+func DBConnect() (*sqlx.DB, error) {
 
 	// get user + pass from env
 	user := os.Getenv("CATREPORT_DB_USER")
@@ -18,7 +17,7 @@ func DBConnect() (*sql.DB, error) {
 	connString := "postgres://" + user + ":" + pass + "@localhost/" + dbname
 
 	// connect to the database or return error
-	db, err := sqlx.Open("postgres", connString)
+	db, err := sqlx.Connect("postgres", connString)
 	if err != nil {
 		return nil, err
 	}
