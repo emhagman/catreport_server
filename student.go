@@ -36,7 +36,10 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 	oldPassword := OldHashPassowrd(password)
 
 	// Make sure we have connection first
+	// Defer close to function end
 	db, err := DBConnect()
+	defer db.Close()
+
 	if err != nil {
 		log.Println("failed to connect to database")
 		log.Println(err.Error())
@@ -107,4 +110,56 @@ func StudentLogin(res http.ResponseWriter, req *http.Request) {
 
 func StudentRegister(res http.ResponseWriter, req *http.Request) {
 
+	// Get register information
+	email := req.FormValue("email")
+	password := req.FormValue("password")
+	first := req.FormValue("first")
+	last := req.FormValue("last")
+
+	// Validate that shit
+	if email == "" || password == "" || first == "" || last == "" {
+		fmt.Fprint(res, Response{"success": false, "message": "Missing something!"})
+		return
+	}
+
+	// Make sure we have a villanova e-mail
+	// Seriously, if you look at this, it's obvious you can just make up an e-mail
+	// Most people won't read this code. E-mail verification would fix this problem...
+	// Not really guarding NSA secrets so this doesn't matter
+	if !strings.Contains(email, "@villanova.edu") {
+		fmt.Fprint(res, Response{"success": false, "message": "Must be a valid Villanova e-mail."})
+		return
+	}
+
+	// Make sure we have connection first
+	// Defer close to function end
+	db, err := DBConnect()
+	defer db.Close()
+	if err != nil {
+		log.Println("failed to connect to database")
+		log.Println(err.Error())
+		fmt.Fprint(res, Response{"success": false, "message": "The database appears to be down..."})
+		return
+	}
+
+	// Prepare our statement
+	stmt, err := db.Prepare("INSERT INTO students (sfirst, last, email, password) VALUES($1, $2, $3, $4)")
+	if err != nil {
+		log.Println("error creating stmt for registering user")
+		log.Println(err.Error())
+		fmt.Fprint(res, Response{"success": false, "message": "Something went horribly wrong!"})
+		return
+	}
+
+	// Execute insert for registration
+	_, err2 := stmt.Exec(first, last, email, password)
+	if err2 != nil {
+		log.Println("error registering new user")
+		log.Println(err2)
+		fmt.Fprint(res, Response{"success": false, "message": "Error registering new user!"})
+	}
+
+	// We made it this far which means they are a user. Give em a session
+	SessionLogin(res, req)
+	fmt.Fprint(res, Response{"success": true})
 }
