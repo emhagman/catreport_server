@@ -3,21 +3,22 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-// ReviewStruct
-type ReviewStruct struct {
-	display_name   string
-	grading        uint
-	class_name     string
-	review         string
-	date_submitted time.Time
-	instructor_id  uint
-	id             uint
+// Review struct to hold data in
+type Review struct {
+	DisplayName   string `db:"display_name"`
+	Grading       uint
+	ClassName     string `db:"class_name"`
+	Review        string
+	DateSubmitted time.Time `db:"date_submitted"`
+	InstructorId  uint      `db:"instructor_id"`
+	Id            uint
 }
 
 func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
@@ -47,7 +48,8 @@ func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Go validate our user (using the old password first)
-	rows, err := db.Query("SELECT * FROM reviews WHERE instructor_id=$1", instructorId)
+	reviews := []Review{}
+	err = db.Get(&reviews, "SELECT * FROM reviews WHERE instructor_id=$1", instructorId)
 	if err != nil {
 		log.Println("error looking up reviews for instructor")
 		log.Println(err)
@@ -56,12 +58,7 @@ func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Go through the rows and read in the data
-	for rows.Next() {
-
-		// load data into a struct
-		data := ReviewStruct{}
-		rows.Scan(&data)
-
-		log.Println(data.class_name)
+	for i := range reviews {
+		log.Println(reviews[i].ClassName)
 	}
 }

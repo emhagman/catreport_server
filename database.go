@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"os"
 )
@@ -17,7 +18,7 @@ func DBConnect() (*sql.DB, error) {
 	connString := "postgres://" + user + ":" + pass + "@localhost/" + dbname
 
 	// connect to the database or return error
-	db, err := sql.Open("postgres", connString)
+	db, err := sqlx.Open("postgres", connString)
 	if err != nil {
 		return nil, err
 	}
