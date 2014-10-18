@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
@@ -62,8 +63,15 @@ func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Go through the rows and read in the data
-	for i := range reviews {
-		log.Println(reviews[i].ClassName)
+	// We go them all so return the data
+	js, errjs := json.Marshal(reviews)
+	if errjs != nil {
+		log.Println("Error marshalling JSON data.")
+		log.Println(errjs)
+		fmt.Fprint(res, Response{"success": false, "message": "Could not format reviews!"})
+		return
 	}
+
+	// Write it!
+	fmt.Fprint(w, reviews)
 }
