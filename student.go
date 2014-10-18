@@ -143,7 +143,7 @@ func StudentRegister(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Prepare our statement
-	stmt, err := db.Prepare("INSERT INTO students (sfirst, last, email, password, verified) VALUES($1, $2, $3, $4, false)")
+	stmt, err := db.Prepare("INSERT INTO students (sfirst, last, email, password, verified, verification_id) VALUES($1, $2, $3, $4, false, $5)")
 	if err != nil {
 		log.Println("error creating stmt for registering user")
 		log.Println(err.Error())
@@ -152,7 +152,8 @@ func StudentRegister(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Execute insert for registration
-	_, err2 := stmt.Exec(first, last, email, password)
+	// For now, we don't use verification tokens.
+	_, err2 := stmt.Exec(first, last, email, password, "AAABBBCCCDDDEEEFFFGGG")
 	if err2 != nil {
 		log.Println("error registering new user")
 		log.Println(err2)
