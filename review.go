@@ -62,6 +62,6 @@ func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 		data := ReviewStruct{}
 		rows.Scan(&data)
 
-		log.Println(data.display_name)
+		log.Println(data.class_name)
 	}
 }
