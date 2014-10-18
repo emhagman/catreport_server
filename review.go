@@ -73,5 +73,5 @@ func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Write it!
-	fmt.Fprint(w, reviews)
+	fmt.Fprint(res, reviews)
 }
