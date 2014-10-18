@@ -27,6 +27,42 @@ type Review struct {
 	DateSubmitted time.Time      `db:"date_submitted" json:"date_submitted"`
 }
 
+func ReviewGetRecent(res http.ResponseWriter, req *http.Request) {
+
+	// Make sure we have connection first
+	// Defer close to functon end
+	db, err := DBConnect()
+	defer db.Close()
+	if err != nil {
+		log.Println("failed to connect to database")
+		log.Println(err.Error())
+		fmt.Fprint(res, Response{"success": false, "message": "Could not connect to the database!"})
+		return
+	}
+
+	// Go validate our user (using the old password first)
+	reviews := []Review{}
+	err = db.Select(&reviews, "SELECT * FROM reviews ORDER BY date_submitted DESC LIMIT 10", instructorId)
+	if err != nil {
+		log.Println("error looking up reviews for instructor")
+		log.Println(err)
+		fmt.Fprint(res, Response{"success": false, "message": "Something went wrong when getting the reviews!"})
+		return
+	}
+
+	// We go them all so return the data
+	js, errjs := json.Marshal(reviews)
+	if errjs != nil {
+		log.Println("Error marshalling JSON data.")
+		log.Println(errjs)
+		fmt.Fprint(res, Response{"success": false, "message": "Could not format reviews!"})
+		return
+	}
+
+	// Write it!
+	fmt.Fprint(res, string(js))
+}
+
 func ReviewGetReviewsById(res http.ResponseWriter, req *http.Request) {
 
 	// Get the instructor id

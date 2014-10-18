@@ -15,7 +15,7 @@ func main() {
 	r.HandleFunc("/api/auth/register", addDefaultHeaders(StudentRegister))
 
 	// Review routes
-	r.HandleFunc("/api/reviews/recent", addDefaultHeaders(ReviewGetReviewsById))
+	r.HandleFunc("/api/reviews/recent", addDefaultHeaders(ReviewGetRecent))
 	r.HandleFunc("/api/reviews/id/{id}", addDefaultHeaders(ReviewGetReviewsById))
 
 	// Server this on /api and use nginx to proxy
