@@ -12,6 +12,7 @@ import (
 // Review struct to hold data in
 type Review struct {
 	DisplayName   string `db:"display_name"`
+	StudentEmail  string `db:"student_email"`
 	Grading       uint
 	ClassName     string `db:"class_name"`
 	Review        string
