@@ -131,6 +131,9 @@ func StudentRegister(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// Generate the hashed password
+	password = HashPassword([]byte(password), []byte(os.Getenv("CATREPORT_SALT")))
+
 	// Make sure we have connection first
 	// Defer close to function end
 	db, err := DBConnect()
